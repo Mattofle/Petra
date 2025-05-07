@@ -11,7 +11,7 @@ part 'app_router.g.dart';
 @Riverpod(keepAlive: true)
 GoRouter goRouter(Ref ref) {
   return GoRouter(
-    initialLocation: AppRoute.login.path,
+    initialLocation: AppRoute.register.path,
     // refreshListenable: ref.watch(authStateNotifierProvider),
     debugLogDiagnostics: true,
 

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
@@ -11,24 +12,24 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  final _nameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
-  
+
   @override
   void dispose() {
-    _nameController.dispose();
+    _firstNameController.dispose();
     _emailController.dispose();
+    _lastNameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final registerState = ref.watch(registerControllerProvider);
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inscription'),
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -36,14 +37,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           children: [
             const SizedBox(height: 20),
             const Text(
-              'Créez votre compte',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              'Registration',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
-            
+
             if (registerState.errorMessage != null)
               Container(
                 padding: const EdgeInsets.all(8),
@@ -57,15 +55,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   style: TextStyle(color: Colors.red.shade900),
                 ),
               ),
-            
+
             // Nom complet
             FLabel(
               axis: Axis.vertical,
-              label: const Text('Nom complet'),
-              description: const Text('Entrez votre nom et prénom.'),
+              label: const Text('First Name'),
               child: TextField(
-                controller: _nameController,
-                onChanged: (value) => ref.read(registerControllerProvider.notifier).setName(value),
+                controller: _firstNameController,
+                onChanged:
+                    (value) => ref
+                        .read(registerControllerProvider.notifier)
+                        .setName(value),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -75,18 +75,42 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
+            // Nom de famille
+            FLabel(
+              axis: Axis.vertical,
+              label: const Text('Last Name'),
+              child: TextField(
+                controller: _lastNameController,
+                onChanged:
+                    (value) => ref
+                        .read(registerControllerProvider.notifier)
+                        .setName(value),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  filled: true,
+                  fillColor: Color(0xFFF5F5F5),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
             // Email avec FLabel
             FLabel(
               axis: Axis.vertical,
-              label: const Text('Email'),
-              description: const Text('Entrez votre adresse email.'),
+              label: const Text('Email or Phone'),
               child: TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                onChanged: (value) => ref.read(registerControllerProvider.notifier).setEmail(value),
+                onChanged:
+                    (value) => ref
+                        .read(registerControllerProvider.notifier)
+                        .setEmail(value),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -96,43 +120,59 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 40),
-            
+
             // Bouton d'inscription
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: registerState.isLoading 
-                  ? null 
-                  : () => ref.read(registerControllerProvider.notifier).register(),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: registerState.isLoading
-                  ? const CircularProgressIndicator()
-                  : const Text(
-                      'S\'inscrire',
-                      style: TextStyle(fontSize: 16),
-                    ),
+              child: FButton(
+                onPress:
+                    registerState.isLoading
+                        ? null
+                        : () =>
+                            ref
+                                .read(registerControllerProvider.notifier)
+                                .register(),
+                child:
+                    registerState.isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                          'register',
+                          style: TextStyle(fontSize: 16),
+                        ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Lien vers la page de connexion
             Center(
-              child: TextButton(
-                onPressed: registerState.isLoading 
-                  ? null 
-                  : () {
-                      // Navigation vers l'écran de connexion
-                      // Navigator.of(context).pop();
-                    },
-                child: const Text('Déjà un compte? Connectez-vous'),
+              child: RichText(
+                text: TextSpan(
+                  text: 'Already have an account? ',
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ), // Couleur du texte principal
+                  children: [
+                    TextSpan(
+                      text: 'Log in',
+                      style: const TextStyle(
+                        color: Colors.blue, // Couleur du texte cliquable
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer:
+                          TapGestureRecognizer()
+                            ..onTap =
+                                registerState.isLoading
+                                    ? null
+                                    : () {
+                                      // Navigation vers l'écran de connexion
+                                      //context.go('/login'); // Utilisation de go_router
+                                    },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
