@@ -1,9 +1,15 @@
+import 'package:cardinal_sdk/auth/authentication_method.dart';
+import 'package:cardinal_sdk/auth/credentials.dart';
+import 'package:cardinal_sdk/cardinal_sdk.dart';
+import 'package:cardinal_sdk/options/sdk_options.dart';
+import 'package:cardinal_sdk/options/storage_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petra/modules/auth/auth_di.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-// Provider pour gérer l'état de l'inscription
-final registerControllerProvider = StateNotifierProvider<RegisterController, RegisterState>((ref) {
-  return RegisterController();
-});
+part 'register_controller.g.dart';
+
+
 
 // État du formulaire d'inscription
 class RegisterState {
@@ -35,8 +41,12 @@ class RegisterState {
 }
 
 // Contrôleur pour gérer la logique d'inscription
-class RegisterController extends StateNotifier<RegisterState> {
-  RegisterController() : super(RegisterState());
+@riverpod
+class RegisterController extends _$RegisterController {
+  @override
+  RegisterState build() {
+    return RegisterState();
+  }
 
   void setName(String name) {
     state = state.copyWith(name: name);
@@ -53,13 +63,21 @@ class RegisterController extends StateNotifier<RegisterState> {
     }
 
     state = state.copyWith(isLoading: true, errorMessage: null);
-    
+
     try {
       // Simuler une attente d'API
       await Future.delayed(const Duration(seconds: 2));
-      
+
       // TODO: Implémenter la logique réelle d'inscription avec votre backend
-      
+
+      final sdk = await ref.read(initializeSdkProvider).call(
+        state.email,
+        state.name,
+      );
+      print('------------------------------------------------------------------------------------');
+      print('SDK initialized: $sdk');
+      print('------------------------------------------------------------------------------------');
+
       state = state.copyWith(isLoading: false);
       // Succès de l'inscription
     } catch (e) {
