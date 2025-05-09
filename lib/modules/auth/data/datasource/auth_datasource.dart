@@ -9,13 +9,12 @@ final String specId = dotenv.env['SPEC_ID']!;
 final String processId = dotenv.env['PROCESS_ID']!;
 
 class AuthDatasource {
-
-  Future<CardinalSdk> registerAndLogin(
-    String email,
-    String firstName,
-    String lastName, 
-    String captcha,
-  ) async {
+  Future<CardinalSdk> registerAndLogin({
+    required String email,
+    String? firstName,
+    String? lastName,
+    required String captcha,
+  }) async {
     // Démarrer le processus d'authentification
     final authStep = await CardinalSdk.initializeWithProcess(
       null, // Application ID
@@ -27,20 +26,21 @@ class AuthDatasource {
       email, // Adresse email de l'utilisateur
       CaptchaOptions.KerberusDelegated(), // Options captcha
       StorageOptions.PlatformDefault, // Options de stockage
-      authenticationProcessTemplateParameters: AuthenticationProcessTemplateParameters(
-        firstName: firstName,
-        lastName: lastName,
-      ),
+      authenticationProcessTemplateParameters:
+          AuthenticationProcessTemplateParameters(
+            firstName: firstName,
+            lastName: lastName,
+          ),
     );
-    
+
     // À ce stade, un code de validation a été envoyé à l'adresse email
     // Vous devez implémenter une UI pour que l'utilisateur entre ce code
     // Par exemple :
     // final validationCode = await showValidationCodeDialog();
-    
+
     // Pour l'exemple, nous allons simuler l'entrée d'un code
     const validationCode = "123456"; // À remplacer par une véritable UI
-    
+
     // Compléter l'authentification avec le code de validation
     return await authStep.completeAuthentication(validationCode);
   }

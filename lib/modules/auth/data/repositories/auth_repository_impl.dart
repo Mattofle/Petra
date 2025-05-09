@@ -7,9 +7,19 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthDatasource _authDatasource;
 
   @override
-  Future<CardinalSdk> initializeSdk(String email, String password, String? firstName, String? lastName) async {
+  Future<CardinalSdk> initializeSdk({
+    required email,
+    required String captcha,
+    String? firstName,
+    String? lastName,
+  }) async {
     try {
-      return _authDatasource.registerAndLogin(email, password, firstName, lastName);
+      return _authDatasource.registerAndLogin(
+        email: email,
+        captcha: captcha,
+        firstName: firstName,
+        lastName: lastName,
+      );
     } catch (e) {
       rethrow;
     }

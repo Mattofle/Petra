@@ -19,8 +19,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   void dispose() {
     _firstNameController.dispose();
-    _emailController.dispose();
     _lastNameController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -56,16 +56,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               ),
 
-            // Nom complet
+            // Prénom
             FLabel(
               axis: Axis.vertical,
               label: const Text('First Name'),
               child: TextField(
                 controller: _firstNameController,
-                onChanged:
-                    (value) => ref
-                        .read(registerControllerProvider.notifier)
-                        .setName(value),
+                onChanged: (value) => ref
+                    .read(registerControllerProvider.notifier)
+                    .setFirstName(value),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -84,10 +83,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               label: const Text('Last Name'),
               child: TextField(
                 controller: _lastNameController,
-                onChanged:
-                    (value) => ref
-                        .read(registerControllerProvider.notifier)
-                        .setName(value),
+                onChanged: (value) => ref
+                    .read(registerControllerProvider.notifier)
+                    .setLastName(value),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -100,17 +98,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
             const SizedBox(height: 20),
 
-            // Email avec FLabel
+            // Email
             FLabel(
               axis: Axis.vertical,
-              label: const Text('Email or Phone'),
+              label: const Text('Email'),
               child: TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                onChanged:
-                    (value) => ref
-                        .read(registerControllerProvider.notifier)
-                        .setEmail(value),
+                onChanged: (value) => ref
+                    .read(registerControllerProvider.notifier)
+                    .setEmail(value),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -127,20 +124,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             SizedBox(
               width: double.infinity,
               child: FButton(
-                onPress:
-                    registerState.isLoading
-                        ? null
-                        : () =>
-                            ref
-                                .read(registerControllerProvider.notifier)
-                                .register(),
-                child:
-                    registerState.isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text(
-                          'register',
-                          style: TextStyle(fontSize: 16),
-                        ),
+                onPress: registerState.isLoading
+                    ? null
+                    : () => ref.read(registerControllerProvider.notifier).register(),
+                child: registerState.isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        'Register',
+                        style: TextStyle(fontSize: 16),
+                      ),
               ),
             ),
 
@@ -153,23 +145,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   text: 'Already have an account? ',
                   style: const TextStyle(
                     color: Colors.black,
-                  ), // Couleur du texte principal
+                  ),
                   children: [
                     TextSpan(
                       text: 'Log in',
                       style: const TextStyle(
-                        color: Colors.blue, // Couleur du texte cliquable
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
-                      recognizer:
-                          TapGestureRecognizer()
-                            ..onTap =
-                                registerState.isLoading
-                                    ? null
-                                    : () {
-                                      // Navigation vers l'écran de connexion
-                                      //context.go('/login'); // Utilisation de go_router
-                                    },
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = registerState.isLoading
+                            ? null
+                            : () {
+                                // Navigation vers l'écran de connexion
+                                //context.go('/login'); // Utilisation de go_router
+                              },
                     ),
                   ],
                 ),
