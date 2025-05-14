@@ -12,6 +12,9 @@ enum AppRoute {
   login(name: 'login', path: '/login'),
   register(name: 'register', path: '/register'),
 
+  //* Cycle report feature routes
+  cycleReportCreation(name: 'cycleReportCreation', path: '/cycle-report-creation'),
+
 
   // TODO(dev): Add new routes following this pattern:
   // exampleRoute(name: 'exampleRouteName', path: '/example/path'),

@@ -10,15 +10,11 @@ class InitializeSdkUsecase {
 
   FutureOr<CardinalSdk> call({
     required email,
-    required String captcha,
-    String? firstName,
-    String? lastName,
+    required String token,
   }) async {
     final sdk = await _authRepository.initializeSdk(
       email: email,
-      captcha: captcha,
-      firstName: firstName,
-      lastName: lastName,
+      token: token,
     );
     return sdk;
   }

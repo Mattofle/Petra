@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:petra/modules/auth/presentation/controllers/register_controller.dart';
+import 'package:petra/navigation/navigation_service.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -12,15 +13,13 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _tokenController = TextEditingController();
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
     _emailController.dispose();
+    _tokenController.dispose();
     super.dispose();
   }
 
@@ -33,9 +32,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
+
+            Image.asset(
+              'assets/images/logo.png',
+              height: 200, 
+              width: 200,
+            ),
+
+            const SizedBox(height: 30),
+
+
             const Text(
               'Registration',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -56,58 +64,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               ),
 
-            // Prénom
+            // First Name
             FLabel(
               axis: Axis.vertical,
               label: const Text('First Name'),
               child: TextField(
-                controller: _firstNameController,
-                onChanged: (value) => ref
-                    .read(registerControllerProvider.notifier)
-                    .setFirstName(value),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                  filled: true,
-                  fillColor: Color(0xFFF5F5F5),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Nom de famille
-            FLabel(
-              axis: Axis.vertical,
-              label: const Text('Last Name'),
-              child: TextField(
-                controller: _lastNameController,
-                onChanged: (value) => ref
-                    .read(registerControllerProvider.notifier)
-                    .setLastName(value),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  ),
-                  filled: true,
-                  fillColor: Color(0xFFF5F5F5),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Email
-            FLabel(
-              axis: Axis.vertical,
-              label: const Text('Email'),
-              child: TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                onChanged: (value) => ref
-                    .read(registerControllerProvider.notifier)
-                    .setEmail(value),
+                onChanged:
+                    (value) => ref
+                        .read(registerControllerProvider.notifier)
+                        .setEmail(value),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -120,19 +87,68 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
             const SizedBox(height: 40),
 
+            // Last Name
+            FLabel(
+              axis: Axis.vertical,
+              label: const Text('Last Name'),
+              child: TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                onChanged:
+                    (value) => ref
+                        .read(registerControllerProvider.notifier)
+                        .setEmail(value),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  filled: true,
+                  fillColor: Color(0xFFF5F5F5),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            // email or phone number
+            FLabel(
+              axis: Axis.vertical,
+              label: const Text('Email or Phone Number'),
+              child: TextField(
+                controller: _tokenController,
+                onChanged:
+                    (value) => ref
+                        .read(registerControllerProvider.notifier)
+                        .setToken(value),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  filled: true,
+                  fillColor: Color(0xFFF5F5F5),
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+
             // Bouton d'inscription
             SizedBox(
               width: double.infinity,
               child: FButton(
-                onPress: registerState.isLoading
-                    ? null
-                    : () => ref.read(registerControllerProvider.notifier).register(),
-                child: registerState.isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text(
-                        'Register',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                onPress:
+                    registerState.isLoading
+                        ? null
+                        : () =>
+                            ref
+                                .read(registerControllerProvider.notifier)
+                                .register(),
+                child:
+                    registerState.isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                          'Register',
+                          style: TextStyle(fontSize: 16),
+                        ),
               ),
             ),
 
@@ -143,9 +159,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               child: RichText(
                 text: TextSpan(
                   text: 'Already have an account? ',
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
+                  style: const TextStyle(color: Colors.black),
                   children: [
                     TextSpan(
                       text: 'Log in',
@@ -153,13 +167,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = registerState.isLoading
-                            ? null
-                            : () {
-                                // Navigation vers l'écran de connexion
-                                //context.go('/login'); // Utilisation de go_router
-                              },
+                      recognizer:
+                          TapGestureRecognizer()
+                            ..onTap =
+                                registerState.isLoading
+                                    ? null
+                                    : () {
+                                      // Navigation vers l'écran de connexion
+                                      //context.go('/login'); // Utilisation de go_router
+                                      ref.read(navigationServiceProvider).goToLogin();
+                                    },
                     ),
                   ],
                 ),

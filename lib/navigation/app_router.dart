@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:petra/modules/auth/presentation/screens/login_screen.dart';
 import 'package:petra/modules/auth/presentation/screens/register_screen.dart';
+import 'package:petra/modules/home/presentation/screens/home_screen.dart';
 import 'package:petra/navigation/app_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,7 +13,7 @@ part 'app_router.g.dart';
 @Riverpod(keepAlive: true)
 GoRouter goRouter(Ref ref) {
   return GoRouter(
-    initialLocation: AppRoute.register.path,
+    initialLocation: AppRoute.login.path,
     // refreshListenable: ref.watch(authStateNotifierProvider),
     debugLogDiagnostics: true,
 
@@ -66,6 +68,31 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) {
           return const RegisterScreen();
         },
+      ),
+
+      GoRoute(
+        path: AppRoute.login.path,
+        name: AppRoute.login.name,  
+        builder: (context, state) {
+          return const LoginScreen();
+        },
+      ),
+
+      GoRoute(
+        path: AppRoute.home.path,
+        name: AppRoute.home.name,
+        builder: (context, state) {
+          return const HomeScreen();
+        },
+        routes: [
+          GoRoute(
+            path: AppRoute.cycleReportCreation.path,
+            name: AppRoute.cycleReportCreation.name,
+            builder: (context, state) {
+              return const HomeScreen();
+            },
+          ),
+        ],
       ),
     ],
     // errorBuilder: (context, state) => const NotFoundScreen(),
