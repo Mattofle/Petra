@@ -8,7 +8,7 @@ mixin CycleReportNavigation {
     router.goNamed(
       AppRoute.cycleReportCreation.name,
       queryParameters: {
-        'reportDate': reportDate,
+        'reportDate': reportDate.toIso8601String(),
       },
     );
   }

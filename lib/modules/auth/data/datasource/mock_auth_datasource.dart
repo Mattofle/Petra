@@ -1,5 +1,8 @@
 
-class MockAuthDatasource {
+import 'package:cardinal_sdk/cardinal_sdk.dart';
+import 'package:petra/modules/auth/data/datasource/auth_datasource.dart';
+
+class MockAuthDatasource implements AuthDatasource {
   // Mock user data
   final Map<String, Map<String, dynamic>> _mockUsers = {
     'test@example.com': {
@@ -66,5 +69,11 @@ class MockAuthDatasource {
       'firstName': firstName,
       'lastName': lastName,
     };
+  }
+
+  @override
+  Future<CardinalSdk> registerAndLogin({required String email, required String token}) {
+    // TODO: implement registerAndLogin
+    throw UnimplementedError();
   }
 }

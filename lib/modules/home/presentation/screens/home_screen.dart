@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
+import 'package:petra/navigation/navigation_service.dart';
 
 // Provider pour gérer les dates autorisées
 final allowedDatesProvider = StateProvider<List<DateTime>>((ref) {
@@ -24,6 +25,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final allowedDates = ref.watch(allowedDatesProvider);
     final selectedDate = ref.watch(selectedDateProvider);
+    final navigationProvider = ref.read(navigationServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
                 dayBuilder: (context, data, child) => child!,
                 start: DateTime(2024),
                 end: DateTime(2030),
-                today: DateTime(2024, 7, 14),
+                today: DateTime.now(),
                 initialType: FCalendarPickerType.day,
                 initialMonth: DateTime.now(),
                 onMonthChange: (date) {
@@ -52,7 +54,7 @@ class HomeScreen extends ConsumerWidget {
                 },
                 onPress: (date) {
                   print('Date sélectionnée: $date');
-                  ref.read(selectedDateProvider.notifier).state = date;
+                  navigationProvider.goToCycleReportCreation(reportDate: date);
                 },
                 onLongPress: (date) {
                   print('Appui long sur: $date');
