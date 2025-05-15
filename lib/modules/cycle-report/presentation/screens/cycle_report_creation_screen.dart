@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:forui/forui.dart';
 import 'package:intl/intl.dart';
 import 'package:petra/modules/cycle-report/presentation/controller/cycle_report_controller.dart';
+import 'package:petra/navigation/navigation_service.dart';
 
 class CycleReportCreationScreen extends ConsumerWidget {
   const CycleReportCreationScreen({this.logDate, super.key});
@@ -23,6 +24,8 @@ class CycleReportCreationScreen extends ConsumerWidget {
 
     final _noteCtrl = TextEditingController(text: controller.note);
 
+    final navigationProvider = ref.read(navigationServiceProvider);
+
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -31,7 +34,10 @@ class CycleReportCreationScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(formattedDate, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                formattedDate,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               const SizedBox(height: 16),
               const Text('Menstruation'),
               const SizedBox(height: 16),
@@ -220,8 +226,36 @@ class CycleReportCreationScreen extends ConsumerWidget {
                 hint: 'e.g. Medications',
                 maxLines: 1,
               ),
-              const SizedBox(height: 16), // Extra padding at the bottom for better scrolling experience
+              const SizedBox(
+                height: 16,
+              ), // Extra padding at the bottom for better scrolling experience
               //TODO; add buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FButton(
+                    style: FButtonStyle.outline,
+                    onPress: () {
+                      //TODO: add delete function
+                    },
+                    child: const Text('Delete'),
+                  ),
+                  const SizedBox(width: 50),
+                  FButton(
+                    style: FButtonStyle.outline,
+                    onPress: () {
+                      navigationProvider.goToHome();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  FButton(
+                    onPress: () {
+                      //TODO: add save function
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

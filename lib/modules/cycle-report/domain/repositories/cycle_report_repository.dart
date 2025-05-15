@@ -9,7 +9,7 @@ abstract class CycleReportRepository {
 
   Future<CycleReportEntity?> getCycleReportById({required String reportId});
 
-  Future<List<CycleReportEntity>> getCycleReportsByDate({
+  Future<CycleReportEntity> getCycleReportsByDate({
     required String userId,
     required DateTime date,
   });
