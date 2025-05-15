@@ -179,7 +179,30 @@ class CycleReportCreationScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     FSelectGroup<String>(
-                      controller: FSelectGroupController(values: {}),
+                      controller: FSelectGroupController(
+                        values: Set<String>.from(controller.symptoms),
+                      ),
+                      onSelect: (value) {
+                        final (String selectedValue, bool isSelected) = value;
+
+                        final updatedSymptoms = Set<String>.from(
+                          controller.symptoms,
+                        );
+
+                        if (isSelected) {
+                          updatedSymptoms.add(selectedValue);
+                        } else {
+                          updatedSymptoms.remove(selectedValue);
+                        }
+
+                        ref
+                            .read(
+                              cycleReportControllerProvider(
+                                initialDate: logDate,
+                              ).notifier,
+                            )
+                            .setSymptoms(updatedSymptoms);
+                      },
                       children: [
                         FCheckbox.grouped(
                           value: "Fatigue",
@@ -250,7 +273,39 @@ class CycleReportCreationScreen extends ConsumerWidget {
                   ),
                   FButton(
                     onPress: () {
-                      //TODO: add save function
+                      if (controller.flowLevel > 0 ||
+                          controller.symptoms.isNotEmpty) {
+                        // Si les conditions sont remplies, sauvegarder et retourner à l'accueil
+                        ref
+                            .read(
+                              cycleReportControllerProvider(
+                                initialDate: logDate,
+                              ).notifier,
+                            )
+                            .saveReport()
+                            .then((_) {
+                              navigationProvider.goToHome();
+                            });
+                      } else {
+                        // Si les conditions ne sont pas remplies, montrer une alerte
+                        showDialog(
+                          context: context,
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text('caution'),
+                                content: const Text(
+                                  'Please select at least one flow level or symptom before saving.',
+                                ),
+                                
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                        );
+                      }
                     },
                     child: const Text('Save'),
                   ),

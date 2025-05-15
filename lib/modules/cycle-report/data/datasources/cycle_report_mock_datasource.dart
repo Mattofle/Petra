@@ -6,7 +6,7 @@ class CycleReportMockDatasource implements CycleReportDatasource {
   // Stockage interne des données simulant une base de données NoSQL
   final List<Map<String, dynamic>> _reportsData = [
     {
-      'id': 'report1',
+      'id': '1',
       'logDate': DateTime.now().subtract(const Duration(days: 30)),
       'flowLevel': 3,
       'symptoms': ['crampes', 'fatigue', 'maux de tête'],
@@ -14,7 +14,7 @@ class CycleReportMockDatasource implements CycleReportDatasource {
       'userId': '1',
     },
     {
-      'id': 'report2',
+      'id': '2',
       'logDate': DateTime.now().subtract(const Duration(days: 29)),
       'flowLevel': 4,
       'symptoms': ['crampes', 'fatigue'],
@@ -22,7 +22,7 @@ class CycleReportMockDatasource implements CycleReportDatasource {
       'userId': '1',
     },
     {
-      'id': 'report3',
+      'id': '3',
       'logDate': DateTime.now().subtract(const Duration(days: 28)),
       'flowLevel': 2,
       'symptoms': ['fatigue'],
@@ -30,7 +30,7 @@ class CycleReportMockDatasource implements CycleReportDatasource {
       'userId': '1',
     },
     {
-      'id': 'report4',
+      'id': '4',
       'logDate': DateTime.now().subtract(const Duration(days: 27)),
       'flowLevel': 1,
       'symptoms': [],
@@ -38,7 +38,7 @@ class CycleReportMockDatasource implements CycleReportDatasource {
       'userId': '1',
     },
     {
-      'id': 'report5',
+      'id': '5',
       'logDate': DateTime.now().subtract(const Duration(days: 2)),
       'flowLevel': 2,
       'symptoms': ['crampes', 'changements d\'humeur'],
@@ -46,7 +46,7 @@ class CycleReportMockDatasource implements CycleReportDatasource {
       'userId': '1',
     },
     {
-      'id': 'report6',
+      'id': '6',
       'logDate': DateTime.now().subtract(const Duration(days: 1)),
       'flowLevel': 3,
       'symptoms': ['crampes', 'fatigue', 'nausée'],
@@ -54,7 +54,7 @@ class CycleReportMockDatasource implements CycleReportDatasource {
       'userId': '1',
     },
     {
-      'id': 'report7',
+      'id': '7',
       'logDate': DateTime.now(),
       'flowLevel': 2,
       'symptoms': ['fatigue'],
@@ -65,6 +65,8 @@ class CycleReportMockDatasource implements CycleReportDatasource {
 
   //* Creation of a new report
   Future<void> createCycleReport(CycleReportModel cycleReport) async {
+    print('----------------------------------------------------------------------------------------');
+    print('Creating a new cycle report: ${cycleReport.toJson()}');
     //* used to simulate a network delay
     await Future.delayed(const Duration(milliseconds: 300));
 
@@ -73,6 +75,9 @@ class CycleReportMockDatasource implements CycleReportDatasource {
     }
 
     _reportsData.add(cycleReport.toJson());
+    print('Report created successfully: ${cycleReport.toJson()}');
+    print('_reportsData: $_reportsData');
+    print('----------------------------------------------------------------------------------------');
   }
 
   //* detete a report
